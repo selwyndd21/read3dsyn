@@ -239,19 +239,19 @@ for (( inputcount=0; inputcount<$length; inputcount++ )) ; do
 # Collect prtflux data
 # Append flux for each group in [Group, Region] format.
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#   echo "Collect prtflux data"
     if [[ -f ${case}_prtflux.txt ]]; then
       # Renew prtflux data for inputs to summary
       paste ${case}_prtflux.txt ${case}_grp_${Egroup} | expand > tmp_FinalData
       mv tmp_FinalData ${case}_prtflux.txt
       # Renew RawData for total flux summation in Python script
-      paste ${case}_py_prtflux.txt ${case}_grp_${Egroup} | expand > tmp_prtflux
+      paste ${case}_py_prtflux.txt ${case}_grp_${Egroup} | expand -t 1 > tmp_prtflux
       mv tmp_prtflux ${case}_py_prtflux.txt
       rm ${case}_grp_${Egroup}
     else
       paste ${case}_RN ${case}_grp_${Egroup} | expand > ${case}_prtflux.txt
       mv ${case}_grp_${Egroup} ${case}_py_prtflux.txt  # Creat RawData for total flux summation in Python script
     fi
-    rm ${case}_RN ${case}_prtflux.txt
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 # Collect prtflux data
@@ -279,8 +279,13 @@ for (( inputcount=0; inputcount<$length; inputcount++ )) ; do
 # Flux summary
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
+  ####################
+  # Cleaning temp files
+  ####################
+  rm ${case}_RN ${case}_prtflux.txt
+  mv $out2 R_TotalFlux.txt
+  rm tmp_prtflux_table tmp_Egroup
 done 
-mv $out2 TotalFlux_R.txt
-rm tmp_prtflux_table tmp_Egroup
+
 
 exit

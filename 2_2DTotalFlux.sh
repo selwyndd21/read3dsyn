@@ -13,7 +13,7 @@ fi
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 # Read Options and Parameters Section:
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-while getopts ":t:z:" opt; do
+while getopts ":tz" opt; do
   case $opt in
     t)
       RT=${OPTARG}
@@ -42,7 +42,7 @@ shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 ####################
 # ERROR code: check the input parameters
 ####################
-if [ ! -f "$RT" ] || [ ! -f "$RZ" ] ; then
+if [ ! -f "$RT" ] && [ ! -f "$RZ" ] ; then
   echo "ERROR: no input file disignated"
   exit 2
 fi
@@ -120,7 +120,7 @@ for inputfile in "${array[@]}"; do
     done < group_${i}.txt
     block_num=$j
     
-    echo "    Tidy up $block_num matrixes in Group $i" # matrix $j in $i group
+#   echo "    Tidy up $block_num matrixes in Group $i" # matrix $j in $i group
     for j in $(seq -f %02g 1 $block_num); do
       cut -d " " -f 2- matrix_${j}.txt > small_${j}.txt
     done
@@ -136,9 +136,9 @@ for inputfile in "${array[@]}"; do
       fi
     done
   
-    echo "    Tidy up Whole Matrix in Group $i"
-    tr -s " " < group_${i}_array.txt > tmp_fluxData
-    mv tmp_fluxData group_${i}_array.txt
+#   echo "    Tidy up Whole Matrix in Group $i"
+#   tr -s " " < group_${i}_array.txt > tmp_fluxData
+#   mv tmp_fluxData group_${i}_array.txt
   done  
   
   #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -151,8 +151,12 @@ for inputfile in "${array[@]}"; do
     echo "!!!WARN: File '${case}_py_TotalFlux.txt' exists. It will be overwrited!!!"
   fi
   
-  echo "  Flux summary"
-  python Adding2D.py $Eg ${case}_py_TotalFlux.txt
+  echo "  Flux summary: Total Flux"
+  python Adding2D.py  1 $Eg ${case}_py_TotalFlux.txt
+  echo "  Flux summary: Thermal Flux"
+  python Adding2D.py  1  44 ${case}_py_G2.txt
+  echo "  Flux summary: Fast Flux"
+  python Adding2D.py 45  47 ${case}_py_G1.txt
   #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
   # Flux summary
   #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -162,9 +166,13 @@ for inputfile in "${array[@]}"; do
   rm group_[0-9][0-9].txt
   rm group_[0-9][0-9]_array.txt
   if [ "$filenum" -eq 0 ]; then
-    mv ${case}_py_TotalFlux.txt TotalFlux_RT.txt
+    mv ${case}_py_TotalFlux.txt RT_TotalFlux.txt
+    mv ${case}_py_G1.txt RT_G1.txt
+    mv ${case}_py_G2.txt RT_G2.txt
   else
-    mv ${case}_py_TotalFlux.txt TotalFlux_RZ.txt
+    mv ${case}_py_TotalFlux.txt RZ_TotalFlux.txt
+    mv ${case}_py_G1.txt RZ_G1.txt
+    mv ${case}_py_G2.txt RZ_G2.txt
   fi
 
   filenum=$((filenum+1))
