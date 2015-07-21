@@ -28,7 +28,7 @@ To make an 3-D synthesis flux,
 2. use 2_2DTotalFlux.sh to extract R-Theta and R_Z dependent flux
   $ sh 2_2DTotalFlux.sh -t input_dort_rt.out -z input_dort_rz.out
 3. use 3_3DSynthesis.py to make 3-D synthesis 
-  $ python 3_3DSynthesis.py TotalFlux_RT.txt TotalFlux_RZ.txt TotalFlux_R.txt
+  $ python 3_3DSynthesis.py RT_TotalFlux.txt RZ_TotalFlux.txt R_TotalFlux.txt
 
 4. use 4_MaxSearching.sh to find local maximun flux in interested region
   $ sh 4_MaxSearching.sh 
