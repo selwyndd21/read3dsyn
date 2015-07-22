@@ -13,7 +13,7 @@ fi
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 # Read Options and Parameters Section:
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-while getopts ":tz" opt; do
+while getopts "t:z:" opt; do
   case $opt in
     t)
       RT=${OPTARG}
